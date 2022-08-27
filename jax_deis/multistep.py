@@ -32,8 +32,8 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     print(denum)
     num = num.at[coef_idx].set(1.0)
     denum = denum.at[coef_idx].set(1.0)
-    return jnp.prod(num) / jnp.prod(denum)
-
+    #return jnp.prod(num) / jnp.prod(denum)
+    return ts_poly, coef_idx, t_val
 vec_poly_coef = jax.vmap(single_poly_coef, (0, None, None), 0)
 
 
