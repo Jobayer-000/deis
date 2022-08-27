@@ -72,7 +72,7 @@ def get_ab_eps_coef_order0(sde, highest_order, timesteps):
     col_idx = jnp.arange(len(timesteps)-1)[:,None]
     idx = col_idx + jnp.arange(1)[None, :]
     vec_ts_poly = timesteps[idx]
-    print('vec', vec_to_poly)
+    print('vec', vec_ts_poly)
     
     return jax.vmap(
         _worker,
