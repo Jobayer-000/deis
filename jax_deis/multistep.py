@@ -8,6 +8,8 @@ def get_integrator_basis_fn(sde):
         dt = (t_end - t_start) / num_item
 
         t_inter = jnp.linspace(t_start, t_end, num_item, endpoint=False)
+        print(t_inter)
+        print(t_start, t_end)
         psi_coef = sde.psi(t_inter, t_end)
         integrand = sde.eps_integrand(t_inter)
 
