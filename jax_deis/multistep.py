@@ -25,6 +25,7 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     j: coef_idx
     """
     num = t_val - ts_poly
+    print('pnum',t_val)
     print('num',num,num.shape)
     print('323', ts_poly.shape)
     print(coef_idx.shape)
