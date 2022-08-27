@@ -20,11 +20,13 @@ def get_sampler(sde, eps_fn, ts_phase, ts_order, num_step, method="rho_rk",ab_or
 
 def get_sampler_t_ab(sde, eps_fn, ts_phase, ts_order, num_step, ab_order):
     rev_ts = get_rev_ts(sde, num_step, ts_order, ts_phase=ts_phase)
-    
+    print(rev_ts)
     x_coef = sde.psi(rev_ts[:-1], rev_ts[1:])
+    print(x_coef)
     eps_coef = get_ab_eps_coef(sde, ab_order, rev_ts, ab_order)
+    print(eps_coef)
     ab_coef = jnp.concatenate([x_coef[:, None], eps_coef], axis=1)
-
+    print(ab_coef)
     def sampler(x0):
         def ab_body_fn(i, val):
             x, eps_pred = val
