@@ -45,6 +45,9 @@ def get_one_coef_per_step_fn(sde):
         j: coef_idx
         """
         integrand, t_inter, dt = _eps_coef_worker_fn(t_start, t_end, num_item)
+        print(ts_poly)
+        print(coef_idx)
+        print(ts_poly[coef_idx])
         poly_coef = vec_poly_coef(t_inter, ts_poly, coef_idx)
         return jnp.sum(integrand * poly_coef) * dt
     return _worker
