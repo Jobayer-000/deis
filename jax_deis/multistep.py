@@ -25,7 +25,10 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     j: coef_idx
     """
     num = t_val - ts_poly
+    print(ts_ply)
+    print(coef_idx)
     denum = ts_poly[coef_idx] - ts_poly
+    print(denum)
     num = num.at[coef_idx].set(1.0)
     denum = denum.at[coef_idx].set(1.0)
     return jnp.prod(num) / jnp.prod(denum)
@@ -61,11 +64,11 @@ def get_coef_per_step_fn(sde, highest_order, order):
 
 def get_ab_eps_coef_order0(sde, highest_order, timesteps):
     _worker = get_coef_per_step_fn(sde, highest_order, 0)
-    print(timesteps)
+    
     col_idx = jnp.arange(len(timesteps)-1)[:,None]
     idx = col_idx + jnp.arange(1)[None, :]
     vec_ts_poly = timesteps[idx]
-    print(vec_ts_poly)
+    
     return jax.vmap(
         _worker,
         (0, 0, 0), 0
