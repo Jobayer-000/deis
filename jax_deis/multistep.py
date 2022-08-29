@@ -25,11 +25,10 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     j: coef_idx
     """
     num = t_val - ts_poly
-    print('pnum',t_val)
-    print('num',num,num.shape)
-    print('323', ts_poly.shape)
-    print(coef_idx.shape)
-    print(ts_poly[coef_idx])
+    
+    print('coef', coef_idx)
+    print('ts_poly')
+    print('num',num)
     denum = ts_poly[coef_idx] - ts_poly
     print('denum', denum)
     num = num.at[coef_idx].set(1.0)
