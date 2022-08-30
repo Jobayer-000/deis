@@ -95,7 +95,7 @@ def get_ab_eps_coef(sde, highest_order, timesteps, order):
     idx = col_idx + jnp.arange(order+1)[None, :]
     vec_ts_poly = timesteps[idx]
     
-
+    print('rr',timesteps[order:-1], timesteps[order+1:], vec_ts_poly)
     cur_coef = jax.vmap(
         cur_coef_worker,
         (0, 0, 0), 0
