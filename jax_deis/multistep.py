@@ -6,7 +6,7 @@ from .sde import MultiStepSDE
 def get_integrator_basis_fn(sde):
     def _worker(t_start, t_end, num_item):
         dt = (t_end - t_start) / num_item
-        
+        print('dt',dt)
         print('t_start', t_start)
         print('t_enter', t_end)
         t_inter = jnp.linspace(t_start, t_end, num_item, endpoint=False)
@@ -65,6 +65,7 @@ def get_coef_per_step_fn(sde, highest_order, order):
         rtn = jnp.zeros((highest_order+1, ), dtype=float)
         ts_poly = ts_poly[:order+1]
         coef = jax.vmap(eps_coef_fn, (None, None, None, 0, None))(t_start, t_end, ts_poly, jnp.flip(jnp.arange(order+1)), num_item)
+        print('coef', coef)
         rtn = rtn.at[:order+1].set(coef)
         return rtn
     return _worker
