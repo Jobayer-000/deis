@@ -7,7 +7,8 @@ def get_integrator_basis_fn(sde):
     def _worker(t_start, t_end, num_item):
         dt = (t_end - t_start) / num_item
         
-        print('t_start', t_start, t_end)
+        print('t_start', t_start)
+        print('t_enter', t_end)
         t_inter = jnp.linspace(t_start, t_end, num_item, endpoint=False)
         print('t_inter', t_inter)
         psi_coef = sde.psi(t_inter, t_end)
@@ -28,7 +29,8 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     
     print('coef', coef_idx)
     print('ts_poly',ts_poly)
-    print('num',t_val)
+    print('t_val',t_val)
+    print('num', num)
     denum = ts_poly[coef_idx] - ts_poly
     print('denum', denum)
     num = num.at[coef_idx].set(1.0)
@@ -48,9 +50,6 @@ def get_one_coef_per_step_fn(sde):
         j: coef_idx
         """
         integrand, t_inter, dt = _eps_coef_worker_fn(t_start, t_end, num_item)
-        print(ts_poly.shape)
-        print(coef_idx.shape)
-        print(ts_poly[coef_idx])
         poly_coef = vec_poly_coef(t_inter, ts_poly, coef_idx)
         return jnp.sum(integrand * poly_coef) * dt
     return _worker
@@ -75,7 +74,7 @@ def get_ab_eps_coef_order0(sde, highest_order, timesteps):
     col_idx = jnp.arange(len(timesteps)-1)[:,None]
     idx = col_idx + jnp.arange(1)[None, :]
     vec_ts_poly = timesteps[idx]
-    print('vec', vec_ts_poly.shape)
+   
     
     return jax.vmap(
         _worker,
