@@ -12,6 +12,7 @@ def get_integrator_basis_fn(sde):
         t_inter = jnp.linspace(t_start, t_end, num_item, endpoint=False)
         print('t_inter', t_inter)
         psi_coef = sde.psi(t_inter, t_end)
+        print('psi_coef', psi_coef)
         integrand = sde.eps_integrand(t_inter)
 
         return psi_coef * integrand, t_inter, dt
