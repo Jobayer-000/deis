@@ -67,6 +67,7 @@ def get_coef_per_step_fn(sde, highest_order, order):
         coef = jax.vmap(eps_coef_fn, (None, None, None, 0, None))(t_start, t_end, ts_poly, jnp.flip(jnp.arange(order+1)), num_item)
         print('coef', coef)
         rtn = rtn.at[:order+1].set(coef)
+        print('rtn', rtn)
         return rtn
     return _worker
 
