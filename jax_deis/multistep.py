@@ -65,7 +65,10 @@ def get_coef_per_step_fn(sde, highest_order, order):
         #!: we do flip of j here!
         """
         rtn = jnp.zeros((highest_order+1, ), dtype=float)
+        print('order_n', order+1)
+        
         ts_poly = ts_poly[:order+1]
+        print('order_ind', ts_poly)
         coef = jax.vmap(eps_coef_fn, (None, None, None, 0, None))(t_start, t_end, ts_poly, jnp.flip(jnp.arange(order+1)), num_item)
         print('coef', coef)
         print('rtn', rtn)
@@ -93,7 +96,7 @@ def get_ab_eps_coef(sde, highest_order, timesteps, order):
         return get_ab_eps_coef_order0(sde, highest_order, timesteps)
     
     prev_coef = get_ab_eps_coef(sde, highest_order, timesteps[:order+1], order=order-1)
-
+    print('order', order)
     cur_coef_worker = get_coef_per_step_fn(sde, highest_order, order)
 
     col_idx = jnp.arange(len(timesteps)-order-1)[:,None]
