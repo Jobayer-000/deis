@@ -68,7 +68,8 @@ def get_coef_per_step_fn(sde, highest_order, order):
         print('order_n', order+1)
         
         ts_poly = ts_poly[:order+1]
-        print('order_ind', ts_poly)
+        print('order_ind', ts_poly[:2])
+        print('order_ori', ts_poly)
         coef = jax.vmap(eps_coef_fn, (None, None, None, 0, None))(t_start, t_end, ts_poly, jnp.flip(jnp.arange(order+1)), num_item)
         print('coef', coef)
         print('rtn', rtn)
