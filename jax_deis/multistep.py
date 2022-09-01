@@ -101,5 +101,6 @@ def get_ab_eps_coef(sde, highest_order, timesteps, order):
 def ab_step(x, ei_coef, new_eps, eps_pred):
     x_coef, eps_coef = ei_coef[0], ei_coef[1:]
     full_eps = jnp.concatenate([new_eps[None], eps_pred])
+    print(full_eps.shape)
     eps_term = jnp.einsum("i,i...->...", eps_coef, full_eps)
     return x_coef * x + eps_term, full_eps[:-1]
