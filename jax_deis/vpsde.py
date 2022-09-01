@@ -88,6 +88,9 @@ def get_interp_fn(_xp, _fp):
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
 
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
+      print('i',i)
+      print('df',df)
+        
       df = fp[i] - fp[i - 1]
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
