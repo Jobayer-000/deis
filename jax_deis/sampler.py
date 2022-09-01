@@ -32,7 +32,8 @@ def get_sampler_t_ab(sde, eps_fn, ts_phase, ts_order, num_step, ab_order):
             x, up_lr, eps_pred = val
             s_t= rev_ts[i]
             
-            new_eps = eps_fn(x, up_lr)
+            #new_eps = eps_fn(x, up_lr)
+            new_eps=x0
             new_x, new_eps_pred = ab_step(x, ab_coef[i], new_eps, eps_pred)
             return new_x, new_eps_pred
 
