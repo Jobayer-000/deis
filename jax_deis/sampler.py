@@ -31,8 +31,8 @@ def get_sampler_t_ab(sde, eps_fn, ts_phase, ts_order, num_step, ab_order):
         def ab_body_fn(i, val):
             x, up_lr, eps_pred = val
             s_t= rev_ts[i]
-            x = jnp.concatenate([x,up_lr],axis=-1)
-            new_eps = eps_fn(x)
+            
+            new_eps = eps_fn(x, up_lr)
             new_x, new_eps_pred = ab_step(x, ab_coef[i], new_eps, eps_pred)
             return new_x, new_eps_pred
 
