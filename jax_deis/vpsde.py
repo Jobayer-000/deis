@@ -86,8 +86,8 @@ def get_interp_fn(_xp, _fp):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
-      print('x', x)
-      print('xp',xp)
+      print('x', x.shape)
+      print('xp',xp.shape)
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
      
         
