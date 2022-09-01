@@ -27,18 +27,18 @@ def get_sampler_t_ab(sde, eps_fn, ts_phase, ts_order, num_step, ab_order):
     print(eps_coef)
     ab_coef = jnp.concatenate([x_coef[:, None], eps_coef], axis=1)
     print(ab_coef)
-    def sampler(x0):
+    def sampler(x0,up_lr):
         def ab_body_fn(i, val):
-            x, eps_pred = val
+            x, up_lr, eps_pred = val
             s_t= rev_ts[i]
-            
-            new_eps = eps_fn(x, s_t)
+            x = jnp.concatenate([x,up_lr],axis=-1)
+            new_eps = eps_fn(x)
             new_x, new_eps_pred = ab_step(x, ab_coef[i], new_eps, eps_pred)
             return new_x, new_eps_pred
 
 
         eps_pred = jnp.asarray([x0,] * ab_order)
-        img, _ = jax.lax.fori_loop(0, num_step, ab_body_fn, (x0, eps_pred))
+        img, _ = jax.lax.fori_loop(0, num_step, ab_body_fn, (x0, up_lr eps_pred))
         return img
     return sampler
 
