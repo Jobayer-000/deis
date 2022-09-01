@@ -22,7 +22,8 @@ def single_poly_coef(t_val, ts_poly, coef_idx=0):
     j: coef_idx
     """
     num = t_val - ts_poly
-    
+    print('ts_poly', ts_poly)
+    print('t_val', t_val)
     denum = ts_poly[coef_idx] - ts_poly
     num = num.at[coef_idx].set(1.0)
     denum = denum.at[coef_idx].set(1.0)
