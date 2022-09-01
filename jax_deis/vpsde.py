@@ -87,7 +87,7 @@ def get_interp_fn(_xp, _fp):
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
       print('x', x)
-      
+      print('xp',xp)
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
       print('i',i)
       print('fp',fp)
