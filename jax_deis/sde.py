@@ -104,6 +104,7 @@ def get_rev_ts(exp_sde, num_step, ts_order, ts_phase="t"):
             np_ts = np.sort(np_rev_ts)
             rev_ts = jnp.asarray(np.flip(np_ts).copy())
         else:
+            print(rev_ts)
             rev_ts = jnp.asarray(rev_ts, dtype=int)
 
     return rev_ts
