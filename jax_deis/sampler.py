@@ -38,7 +38,7 @@ def get_sampler_t_ab(sde, eps_fn, ts_phase, ts_order, num_step, ab_order):
 
 
         eps_pred = jnp.asarray([x0,] * ab_order)
-        img, _ = jax.lax.fori_loop(0, num_step, ab_body_fn, (x0, up_lr eps_pred))
+        img, _ = jax.lax.fori_loop(0, num_step, ab_body_fn, (x0, up_lr, eps_pred))
         return img
     return sampler
 
