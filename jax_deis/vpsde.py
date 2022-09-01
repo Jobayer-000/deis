@@ -89,8 +89,7 @@ def get_interp_fn(_xp, _fp):
       print('x', x)
       print('xp',xp)
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
-      print('i',i)
-      print('fp',fp)
+     
         
       df = fp[i] - fp[i - 1]
       dx = xp[i] - xp[i - 1]
