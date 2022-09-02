@@ -59,8 +59,11 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start))
 
     def eps_integrand(self, vec_t):
-        d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
-        
+        d_log_alpha_dtau, df, dx, delta, i,fd  = self.t2alpha_fn(vec_t)#self.d_log_alpha_dtau_fn(vec_t)
+        print('df', df)
+        print('dx', dx)
+        print('i', i)
+        print('fd', fd)
         print('d_log_alpha_dtau', d_log_alpha_dtau)
         integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t))
         print('eps_integ', integrand)
@@ -97,7 +100,7 @@ def get_interp_fn(_xp, _fp):
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
-      return jnp.ones((10))
+      return f, df, dx, delta, i, fp[i], fp[i - 1] + (delta / dx) * df
   return _fn
 
 class DiscreteVPSDE(VPSDE):
