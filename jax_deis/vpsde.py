@@ -119,7 +119,7 @@ class DiscreteVPSDE(VPSDE):
         #alpha2t_fn = lambda item: jnp.clip(
             #_alpha2t_fn(2.0 - item), j_times[0], j_times[-1]
         #)
-        alpha_fn = lambda item:_t2alpha_fn(item)
+        t2alpha_fn = lambda item:_t2alpha_fn(item)
         alpha2t_fn = lambda item:_alpha2t_fn(2.0 - item)
         
         super().__init__(t2alpha_fn, alpha2t_fn, j_times[0], j_times[-1])
