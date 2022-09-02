@@ -90,7 +90,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return v / coef
 
 def get_interp_fn(_xp, _fp):
-  print('_xp', xp)
+  print('xp', _xp)
   @jax.jit
   def _fn(x):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
