@@ -43,7 +43,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         self.t2alpha_fn = t2alpha_fn
         self.alpha2t_fn = alpha2t_fn
         self.alpha_start = 1.0
-        log_alpha_fn = lambda t: jnp.log(self.t2alpha_fn(t))
+        log_alpha_fn = lambda t: jnp.log(self.t2alpha_fn(t, h=True))
         grad_log_alpha_fn = jax.grad(log_alpha_fn)
         self.d_log_alpha_dtau_fn = jax.vmap(grad_log_alpha_fn)
 
@@ -56,12 +56,14 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return self._sampling_eps
 
     def psi(self, t_start, t_end):
-        print('psi', jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start)))
         return jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start))
 
     def eps_integrand(self, vec_t):
-        d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
+        d_log_alpha_dtau, df, delta, fd = self.d_log_alpha_dtau_fn(vec_t, h=False)
         print('vec_t', vec_t)
+        print('df', df)
+        print('delta', delta)
+        print('fd', fd)
         print('d_log_alpha_dtau', d_log_alpha_dtau)
         integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t))
         print('eps_integ', integrand)
@@ -86,7 +88,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
 
 def get_interp_fn(_xp, _fp):
   @jax.jit
-  def _fn(x):
+  def _fn(x,h=True):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
@@ -99,7 +101,7 @@ def get_interp_fn(_xp, _fp):
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
       print('f', f)
-      return f
+      return f if h else (i, df, delta, ,fp[i - 1] + (delta / dx) * df)
   return _fn
 
 class DiscreteVPSDE(VPSDE):
