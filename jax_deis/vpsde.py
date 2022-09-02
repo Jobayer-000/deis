@@ -113,12 +113,15 @@ class DiscreteVPSDE(VPSDE):
         
         _t2alpha_fn = get_interp_fn(j_times, j_alphas)
         _alpha2t_fn = get_interp_fn(2.0 - j_alphas, j_times)
-        t2alpha_fn = lambda item: jnp.clip(
-            _t2alpha_fn(item), 1e-7, 1.0 - 1e-7
-        )
-        alpha2t_fn = lambda item: jnp.clip(
-            _alpha2t_fn(2.0 - item), j_times[0], j_times[-1]
-        )
+        #t2alpha_fn = lambda item: jnp.clip(
+           # _t2alpha_fn(item), 1e-7, 1.0 - 1e-7
+        #)
+        #alpha2t_fn = lambda item: jnp.clip(
+            #_alpha2t_fn(2.0 - item), j_times[0], j_times[-1]
+        #)
+        alpha_fn = lambda item:
+           _t2alpha_fn(item)
+        alpha2t_fn = lambda item:_alpha2t_fn(2.0 - item)
         
         super().__init__(t2alpha_fn, alpha2t_fn, j_times[0], j_times[-1])
         warnings.warn(
