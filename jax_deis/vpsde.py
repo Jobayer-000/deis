@@ -45,7 +45,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         self.alpha_start = 1.0
         log_alpha_fn = lambda t: self.t2alpha_fn(t) #jnp.log(self.t2alpha_fn(t))
         grad_log_alpha_fn = jax.grad(log_alpha_fn)
-        self.d_log_alpha_dtau_fn = jax.vmap(grad_log_alpha_fn)
+        self.d_log_alpha_dtau_fn = ax.vmap(log_alpha_fn)#jax.vmap(grad_log_alpha_fn)
 
     @property
     def sampling_T(self):
