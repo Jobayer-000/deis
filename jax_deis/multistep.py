@@ -41,6 +41,7 @@ def get_one_coef_per_step_fn(sde):
         """
         integrand, t_inter, dt = _eps_coef_worker_fn(t_start, t_end, num_item)
         poly_coef = vec_poly_coef(t_inter, ts_poly, coef_idx)
+        print('single_coef', poly_coef)
         return jnp.sum(integrand * poly_coef) * dt
     return _worker
 
@@ -56,7 +57,9 @@ def get_coef_per_step_fn(sde, highest_order, order):
         
         ts_poly = ts_poly[:order+1]
         coef = jax.vmap(eps_coef_fn, (None, None, None, 0, None))(t_start, t_end, ts_poly, jnp.flip(jnp.arange(order+1)), num_item)
+        print('coef_fn', coef)
         rtn = rtn.at[:order+1].set(coef)
+        print('rtn', rtn)
         return rtn
     return _worker
 
