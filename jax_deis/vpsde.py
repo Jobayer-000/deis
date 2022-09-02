@@ -92,7 +92,7 @@ def get_interp_fn(_xp, _fp):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
-      print('x', x)
+     
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
      
         
@@ -100,8 +100,7 @@ def get_interp_fn(_xp, _fp):
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
-      print('f', f)
-      return f if h else (i, df, delta, ,fp[i - 1] + (delta / dx) * df)
+      return f if h else (i, df, delta, fp[i - 1] + (delta / dx) * df)
   return _fn
 
 class DiscreteVPSDE(VPSDE):
