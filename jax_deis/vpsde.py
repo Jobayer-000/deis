@@ -113,6 +113,7 @@ class DiscreteVPSDE(VPSDE):
             jnp.arange(len(discrete_alpha)), dtype=float
         )
         # use a piecewise linear function to fit alpha
+        print(j_alphas)
         _t2alpha_fn = get_interp_fn(j_times, j_alphas)
         _alpha2t_fn = get_interp_fn(2.0 - j_alphas, j_times)
         #t2alpha_fn = lambda item: jnp.clip(
