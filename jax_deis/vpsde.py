@@ -97,7 +97,7 @@ def get_interp_fn(_xp, _fp):
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
-      return dx
+      return df
   return _fn
 
 class DiscreteVPSDE(VPSDE):
