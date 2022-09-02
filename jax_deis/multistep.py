@@ -7,7 +7,6 @@ def get_integrator_basis_fn(sde):
     def _worker(t_start, t_end, num_item):
         dt = (t_end - t_start) / num_item
         t_inter = jnp.linspace(t_start, t_end, num_item, endpoint=False)
-        print('t_end', t_end)
         psi_coef = sde.psi(t_inter, t_end)
         integrand = sde.eps_integrand(t_inter)
 
@@ -41,8 +40,8 @@ def get_one_coef_per_step_fn(sde):
         """
         integrand, t_inter, dt = _eps_coef_worker_fn(t_start, t_end, num_item)
         poly_coef = vec_poly_coef(t_inter, ts_poly, coef_idx)
+        print('integ', integrand)
         print('single_coef', poly_coef)
-        print('sum',jnp.sum(integrand * poly_coef))
         return jnp.sum(integrand * poly_coef) * dt
     return _worker
 
