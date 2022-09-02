@@ -62,7 +62,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
         
         print('d_log_alpha_dtau', d_log_alpha_dtau)
-        integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t)[0])
+        integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t))
         print('eps_integ', integrand)
         return integrand
 
