@@ -56,11 +56,13 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return self._sampling_eps
 
     def psi(self, t_start, t_end):
+        print('psi', jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start)))
         return jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start))
 
     def eps_integrand(self, vec_t):
         d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
         integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t))
+        print('eps_integ', integrand)
         return integrand
 
     def t2rho(self, t):
@@ -87,8 +89,6 @@ def get_interp_fn(_xp, _fp):
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
       
-      print('x', x.shape)
-      print('xp',jnp.asarray(xp).shape)
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
      
         
