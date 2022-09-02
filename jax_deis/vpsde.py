@@ -61,6 +61,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
 
     def eps_integrand(self, vec_t):
         d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
+        print('vec_t', vec_t)
         print('d_log_alpha_dtau', d_log_alpha_dtau)
         integrand = -0.5 * d_log_alpha_dtau / jnp.sqrt(1 - self.t2alpha_fn(vec_t))
         print('eps_integ', integrand)
@@ -89,7 +90,7 @@ def get_interp_fn(_xp, _fp):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
-      
+      print('x', x)
       i = jnp.clip(jnp.searchsorted(xp, x, side='right'), 1, len(xp) - 1)
      
         
@@ -97,6 +98,7 @@ def get_interp_fn(_xp, _fp):
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
+      print('f', f)
       return f
   return _fn
 
