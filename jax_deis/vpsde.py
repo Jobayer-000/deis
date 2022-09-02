@@ -43,7 +43,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         self.t2alpha_fn = t2alpha_fn
         self.alpha2t_fn = alpha2t_fn
         self.alpha_start = 1.0
-        log_alpha_fn = lambda t: jnp.log(self.t2alpha_fn(t, h=True))
+        log_alpha_fn = lambda t: self.t2alpha_fn(t) #jnp.log(self.t2alpha_fn(t))
         grad_log_alpha_fn = jax.grad(log_alpha_fn)
         self.d_log_alpha_dtau_fn = jax.vmap(grad_log_alpha_fn)
 
@@ -56,11 +56,12 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return self._sampling_eps
 
     def psi(self, t_start, t_end):
-        return jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start))
+        return jnp.sqrt(self.t2alpha_fn(t_end)[0] / self.t2alpha_fn(t_start)[0])
 
     def eps_integrand(self, vec_t):
-        d_log_alpha_dtau, df, delta, fd = self.d_log_alpha_dtau_fn(vec_t, h=False)
+        d_log_alpha_dtau, i, df, delta, fd = self.d_log_alpha_dtau_fn(vec_t)
         print('vec_t', vec_t)
+        print('i', i)
         print('df', df)
         print('delta', delta)
         print('fd', fd)
@@ -88,7 +89,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
 
 def get_interp_fn(_xp, _fp):
   @jax.jit
-  def _fn(x,h=True):
+  def _fn(x):
       if jnp.shape(_xp) != jnp.shape(_fp) or jnp.ndim(_xp) != 1:
           raise ValueError("xp and fp must be one-dimensional arrays of equal size")
       x, xp, fp = _promote_dtypes_inexact(x, _xp, _fp)
@@ -100,7 +101,7 @@ def get_interp_fn(_xp, _fp):
       dx = xp[i] - xp[i - 1]
       delta = x - xp[i - 1]
       f = jnp.where((dx == 0), fp[i], fp[i - 1] + (delta / dx) * df)
-      return f if h else (i, df, delta, fp[i - 1] + (delta / dx) * df)
+      return f, i, df, delta, fp[i - 1] + (delta / dx) * df
   return _fn
 
 class DiscreteVPSDE(VPSDE):
@@ -112,12 +113,15 @@ class DiscreteVPSDE(VPSDE):
         # use a piecewise linear function to fit alpha
         _t2alpha_fn = get_interp_fn(j_times, j_alphas)
         _alpha2t_fn = get_interp_fn(2.0 - j_alphas, j_times)
-        t2alpha_fn = lambda item: jnp.clip(
-            _t2alpha_fn(item), 1e-7, 1.0 - 1e-7
-        )
-        alpha2t_fn = lambda item: jnp.clip(
-            _alpha2t_fn(2.0 - item), j_times[0], j_times[-1]
-        )
+        #t2alpha_fn = lambda item: jnp.clip(
+           # _t2alpha_fn(item), 1e-7, 1.0 - 1e-7
+        #)
+        #alpha2t_fn = lambda item: jnp.clip(
+            #_alpha2t_fn(2.0 - item), j_times[0], j_times[-1]
+        #)
+        t2alpha_fn = lambda item: _t2alpha_fn(item)
+        
+        alpha2t_fn = lambda item: _alpha2t_fn(2.0 - item)
         super().__init__(t2alpha_fn, alpha2t_fn, j_times[0], j_times[-1])
         warnings.warn(
             "\nWe are using a piecewise linear function to fit alpha and construct continuous time SDE\n" + \
