@@ -56,7 +56,7 @@ class VPSDE(ExpSDE, MultiStepSDE):
         return self._sampling_eps
 
     def psi(self, t_start, t_end):
-        return jnp.sqrt(self.t2alpha_fn(t_end)[0] / self.t2alpha_fn(t_start)[0])
+        return jnp.sqrt(self.t2alpha_fn(t_end) / self.t2alpha_fn(t_start))
 
     def eps_integrand(self, vec_t):
         d_log_alpha_dtau = self.d_log_alpha_dtau_fn(vec_t)
